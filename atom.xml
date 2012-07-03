@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Getting Technical]]></title>
+  <link href="http://twitchtv.github.com/atom.xml" rel="self"/>
+  <link href="http://twitchtv.github.com/"/>
+  <updated>2012-05-30T17:37:44-07:00</updated>
+  <id>http://twitchtv.github.com/</id>
+  <author>
+    <name><![CDATA[TwitchTV]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[A Transitional Year]]></title>
+    <link href="http://twitchtv.github.com/blog/2012/05/30/a-transitional-year/"/>
+    <updated>2012-05-30T16:44:00-07:00</updated>
+    <id>http://twitchtv.github.com/blog/2012/05/30/a-transitional-year</id>
+    <content type="html"><![CDATA[<p>Next week is E3, which marks a year since we first launched TwitchTV. What a year it has been!
+This post serves to provide an answer to the question I field the most when out and about talking about
+what we do: &#8220;What is the difference between TwitchTV and JustinTV?&#8221;</p>
+
+<!-- more -->
+
+
+<p>I joined at the end of April &#8216;12, I&#8217;d been a fan and user of JustinTV for a long time, as a technologist I highly
+admired their large scale video system, after reading
+<a href="http://highscalability.com/blog/2010/3/16/justintvs-live-video-broadcasting-architecture.html">the coverage on high scalability</a>
+I knew these guys were serious business. An <a href="http://ossareh.posterous.com/interviews-are-tough-code-submissions-are-har">intense interview later</a>
+and I was the only developer of a new website called &#8220;Xarth&#8221;.</p>
+
+<p>The primary task on hand was to convert all the JTV pages over to a new layout, displaying just the gaming subsection of
+content available on JustinTV. It turned out that live video game streaming was taking off at an insane rate,
+relative to the rest of JTV gaming looked like a rocket ship. &#8220;Xarth&#8221; was our attempt to make those gamers happy.</p>
+
+<p>After a few weeks hacking on this conversion it was decided we launch the new site during E3 2011. I threw
+myself at finishing pages and re-factoring various features to support being run on two sites. At few days prior
+to launch we decided to change the name of &#8220;Xarth&#8221; to &#8220;TwitchTV&#8221;, we raced to fix all of our branding for E3 and launched!
+The rest is history; we&#8217;ve been <a href="http://www.google.com/trends/?q=twitch.tv,own3d.tv,machinima.com&amp;ctab=0&amp;geo=all&amp;date=ytd&amp;sort=0"><em>killing it</em></a>
+ever since.</p>
+
+<p>So with the history out of the way, I think it is easiest to explain the difference as &#8220;TwitchTV is JustinTV with a
+strong product:market fit and super passionate users&#8221;. JustinTV is now maintained by a small team within the company
+with the rest of our technical focus being on building what our gaming users and broadcasters need. It is amazing
+to build software for tech savvy users, they understand the pain in technology, they use modern browsers(!!!) and
+as avid gamers ourselves they give us content that we enjoy! We all refer to ourselves as &#8220;TwitchTV&#8221; now&#8230;</p>
+
+<p>Next week is E3, we&#8217;ve gone from being a company launching to being a player in the industry in a year. We&#8217;re stacked
+with super exiciting announcements next week, we&#8217;ll discuss the technology behind over the next few posts.</p>
+]]></content>
+  </entry>
+  
+</feed>
