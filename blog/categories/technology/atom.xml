@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Technology | Getting Technical]]></title>
   <link href="http://twitchtv.github.com/blog/categories/technology/atom.xml" rel="self"/>
   <link href="http://twitchtv.github.com/"/>
-  <updated>2012-07-05T11:18:04-07:00</updated>
+  <updated>2012-07-05T15:16:08-07:00</updated>
   <id>http://twitchtv.github.com/</id>
   <author>
     <name><![CDATA[TwitchTV]]></name>
@@ -21,7 +21,7 @@
     <content type="html"><![CDATA[<p>Midway through '10 we found our product market fit and with the increased usage, <a href="/blog/2012/05/30/a-transitional-year/">new focus</a>,
 and a real desire to building something massive we started a huge internal effort to increase code quality. Testing is a cornerstone
 of everything that we write now. RSpec has changed the format in which tests are to be expressed and recently we got together to
-share that information with all devs with the aim being - all new tests you write should be in the new format and convert the tests
+share that information with all devs with the aim being that all new tests you write should be in the new format and convert the tests
 written in the old format when you come across them.</p>
 
 <!-- more -->
@@ -139,11 +139,11 @@ focus on are:
  * it / its()</p>
 
 <p>Not mentioned here are <em>describe</em> and <em>context</em>, these haven't changed in the DSL however you'll find that you use them more in the
-new format. Also not mentioned is <em>assigns</em>,</p>
+new format.</p>
 
 <h2>subject</h2>
 
-<p>subject blocks are evaluated when rspec hits an it/its call. The return value is available in it/its blocks as the varaible <em>subject</em>.
+<p><em>subject</em> blocks are evaluated when rspec hits an it/its call. The return value is available in it/its blocks as the varaible <em>subject</em>.
 This permits you to build up the properties of your subject as you evaluate the file, you can see this in the new format where we
 describe the basic subject on line 6. <em>login</em> does not exist until we have evaluated all the in-scope let blocks after encountering an it.</p>
 
@@ -207,6 +207,48 @@ end
 
 <p>  end
   ...
+```
+<em>its(:sym)</em> is a special form of <em>it</em> which permits you to assert that a given property is what you expect it to me. Given</p>
+
+<p>``` ruby its(:sym)
+  ...
+  describe "something" do</p>
+
+<pre><code>subject do
+  get :index
+  response
+end
+
+its(:code) { should eq("200") }
+</code></pre>
+
+<p>  end
+  ...
+```</p>
+
+<p>The <em>its(:code)</em> call calls #code on the subject, the block then uses this as the implicit subject.</p>
+
+<p>This new DSL actually has one significant downside - every time you encounter an <em>it</em> it evaluates the <em>subject</em> and <em>let</em> blocks that it should.
+This means if you're testing lots of assertions you'll end up with lots of test environment spin up. The best solution we have for that right now
+is that if you are testing lots of things you should employ good judgement and wrap your assertions in the block form of it.</p>
+
+<p>``` ruby block form of it
+   ...
+   describe "something" do</p>
+
+<pre><code>subject do
+  get :index
+  response
+end
+
+it do
+  subject.code.should eq("200")
+  subject.body.should eq("foo")
+end
+</code></pre>
+
+<p>   end
+   ...
 ```</p>
 
 <p>In summary the trade offs of the new format are:
