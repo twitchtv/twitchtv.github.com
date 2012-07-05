@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Technology | Getting Technical]]></title>
+  <link href="http://twitchtv.github.com/blog/categories/technology/atom.xml" rel="self"/>
+  <link href="http://twitchtv.github.com/"/>
+  <updated>2012-07-05T11:18:04-07:00</updated>
+  <id>http://twitchtv.github.com/</id>
+  <author>
+    <name><![CDATA[TwitchTV]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[RSpec Tech Talk]]></title>
+    <link href="http://twitchtv.github.com/blog/2012/07/04/rspec-tech-talk/"/>
+    <updated>2012-07-04T20:14:00-07:00</updated>
+    <id>http://twitchtv.github.com/blog/2012/07/04/rspec-tech-talk</id>
+    <content type="html"><![CDATA[<p>Midway through '10 we found our product market fit and with the increased usage, <a href="/blog/2012/05/30/a-transitional-year/">new focus</a>,
+and a real desire to building something massive we started a huge internal effort to increase code quality. Testing is a cornerstone
+of everything that we write now. RSpec has changed the format in which tests are to be expressed and recently we got together to
+share that information with all devs with the aim being - all new tests you write should be in the new format and convert the tests
+written in the old format when you come across them.</p>
+
+<!-- more -->
+
+
+<p><em>Everything is lazy now</em></p>
+
+<p>The most significant change is that test evaluation is lazy now. This is implemented with a new DSL. The proposed benefits of this
+change are that the minimum set of infrastructure is spun up for each test case. We haven't noticed an increase or slowdown in the
+runtime performance of tests written in this new format - this is likely that our tests are bound by db IO (we've recently migrated
+all of our tests to use <a href="https://github.com/thoughtbot/factory_girl/">FactoryGirl</a> and as a result we can use a non centralized
+test db). However we prefer the expressiveness of this format and when dealing with tests it really helps to write more with fewer
+lines.</p>
+
+<p>``` ruby Old style basic test
+require 'spec_helper'</p>
+
+<p>describe BasicController do
+  render_views</p>
+
+<p>  before(:each) do</p>
+
+<pre><code>@user = FactoryGirl.create(:user)
+</code></pre>
+
+<p>  end</p>
+
+<p>  describe '#show' do</p>
+
+<pre><code>context "error cases" do
+  context "when no login parameter is provided" do
+    get :show
+
+    response.code.should eq("404")
+    Yajl.load(response.body).should eq({:error =&gt; :missing_login})
+  end
+
+  context "when an invalid login parameter is provided" do
+    get :show, :login =&gt; SecureRandom.hex(6)
+
+    response.code.should eq("404")
+    Yajl.load(response.body).should eq({:error =&gt; :invalid_login})
+  end
+end
+
+context "when a login parameter is provided" do
+  get :show, :login =&gt; @user.login
+
+  response.code.should eq("200")
+  json = Yajl.load(response.body)
+  json.should eq(@user.to_json)
+end
+</code></pre>
+
+<p>  end
+end
+```
+would now be written</p>
+
+<p>``` ruby New style basic test
+require 'spec_helper'</p>
+
+<p>describe BasicController do
+  render_views</p>
+
+<p>  describe '#show' do</p>
+
+<pre><code>subject do
+  get :show, :login =&gt; login
+  response
+end
+
+
+context "error cases" do
+  let(:expected_body) { {:error =&gt; error_symbol } }
+
+  context "when no login parameter is provided" do
+    subject do
+      get :show
+      response
+    end
+
+    let(:error_symbol) { :missing_login }
+
+    its(:code) { should eq("404") }
+    it { Yajl.load(subject.body).should eq(expected_body) }
+  end
+
+  context "when an invalid login parameter is provided" do
+    let(:login) { SecureRandom.hex(6) }
+    let(:error_symbol) { :invalid_login }
+
+    its(:code) { should eq("404") }
+    it { Yajl.load(subject.body).should eq(expected_body) }
+  end
+end
+
+context "when a login parameter is provided" do
+  let(:user) { FactoryGirl.create(:user) }
+  let(:login) { user.login }
+
+  its(:code) { should eq("200") }
+  it { Yajl.load(subject.body).should eq(user.to_json) }
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>These two files will provide the base for summarizing the changes between the old format and the new format. The main keywords we'll
+focus on are:
+ * subject
+ * let
+ * it / its()</p>
+
+<p>Not mentioned here are <em>describe</em> and <em>context</em>, these haven't changed in the DSL however you'll find that you use them more in the
+new format. Also not mentioned is <em>assigns</em>,</p>
+
+<h2>subject</h2>
+
+<p>subject blocks are evaluated when rspec hits an it/its call. The return value is available in it/its blocks as the varaible <em>subject</em>.
+This permits you to build up the properties of your subject as you evaluate the file, you can see this in the new format where we
+describe the basic subject on line 6. <em>login</em> does not exist until we have evaluated all the in-scope let blocks after encountering an it.</p>
+
+<p>The <a href="https://www.relishapp.com/rspec/rspec-core/v/2-10/docs/subject/explicit-subject">rspec docs</a> naturally cover the concept of subjects
+in detail. Something we don't make enough use of is the ability to
+<a href="https://www.relishapp.com/rspec/rspec-core/v/2-10/docs/subject/implicitly-defined-subject">implicitly define a subject</a></p>
+
+<h2>let</h2>
+
+<p><em>let</em> is the most important part of the new DSL. Fully grokking how <em>let</em> and <em>let!</em> work and differ from one another permits you to
+really DRY up your tests. The first thing to understand is that <em>let</em> attempts to provide a concept of lexical scoping:</p>
+
+<p>``` ruby let stacking
+  ...
+  describe "something" do</p>
+
+<pre><code>let(:the_thing) { :foo }
+context "when interesting" do
+  let(:the_thing) { :bar }
+
+  it { the_thing.should eq(:bar) } # run first
+end
+
+it { the_thing.should eq(:foo) }   # run second
+</code></pre>
+
+<p>  end
+  ...
+```
+Clearly this is not like ruby and after a while of completely abusing variable scopes it doesn't feel "natural". Sometimes your <em>let</em> has
+a side effect that needs to be realized immediately <em>let!</em> provides this ability. We've rarely found the need to use it, though it has
+helped out in an occasion or two.</p>
+
+<p>It is very easy to conflate <em>subject</em> and <em>let</em>, as the example above does; it would be far more correct to have the_thing in a <em>subject</em>.
+You should keep an eye on this, by using <em>subject</em> your <em>it/its</em> calls be far more concise.</p>
+
+<p><em>let</em> has begun replacing our use of <em>before(:each)</em>, particularly when stubbing out values; something that we'll go into depth in another
+post.</p>
+
+<h2>it and its()</h2>
+
+<p><em>it</em> provides the basis of an assertion. The default behavior is to operate on the result of a subject block, in our examples above we're
+returning <em>response</em>. When <em>should</em> is encountered in an <em>it</em> block without being called on an explicit receiver it is applied to the result
+of <em>subject</em>:</p>
+
+<p>``` ruby Implicitly called on subject
+  ...
+  describe "something" do</p>
+
+<pre><code>subject { expectation }
+context "when exciting" do
+  let(:expectation) { :exciting }
+  it { should eq(:exciting) }
+end
+
+context "when boring" do
+  let(:expectation) { :boring }
+  it { should eq({:boring}) }
+end
+</code></pre>
+
+<p>  end
+  ...
+```</p>
+
+<p>In summary the trade offs of the new format are:
+ * less flexible, the old format lends to writing tests however you want
+ * more syntax, and understanding that syntax - i.e. everything being lazy will burn you once or twice
+ * more DRY
+ * easier on the eyes, when you become acccustomed to the format it is much easier to navigate
+ * less state, you're less likely to be burned by a rouge before block which establishes an expectation of an object</p>
+
+<p>The expectation of our users that our site works all the time is a reasonable one, and the time investment in tests has already paid back
+dividends by preventing breaking changes from hitting production. As we're writing more tests we're becoming far more opinionated about
+the <em>how</em> and <em>why</em> of writing tests - something that I hope to delve into in more detail in future posts, along with details of our
+testing infrastructure and the tools that make it possible.</p>
+]]></content>
+  </entry>
+  
+</feed>
