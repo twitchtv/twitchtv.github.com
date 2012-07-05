@@ -8,8 +8,8 @@ author: Mukund Lakshman
 ---
 Midway through '10 we found our product market fit and with the increased usage, [new focus](/blog/2012/05/30/a-transitional-year/),
 and a real desire to building something massive we started a huge internal effort to increase code quality. Testing is a cornerstone
-of everything that we write now. RSpec has changed the format in which tests are to be expressed and recently we got together to 
-share that information with all devs with the aim being - all new tests you write should be in the new format and convert the tests
+of everything that we write now. RSpec has changed the format in which tests are to be expressed and recently we got together to
+share that information with all devs with the aim being that all new tests you write should be in the new format and convert the tests
 written in the old format when you come across them.
 
 <!-- more -->
@@ -119,12 +119,12 @@ focus on are:
  * it / its()
 
 Not mentioned here are _describe_ and _context_, these haven't changed in the DSL however you'll find that you use them more in the
-new format. Also not mentioned is _assigns_, 
+new format.
 
 subject
 -------
 
-subject blocks are evaluated when rspec hits an it/its call. The return value is available in it/its blocks as the varaible _subject_.
+_subject_ blocks are evaluated when rspec hits an it/its call. The return value is available in it/its blocks as the varaible _subject_.
 This permits you to build up the properties of your subject as you evaluate the file, you can see this in the new format where we
 describe the basic subject on line 6. _login_ does not exist until we have evaluated all the in-scope let blocks after encountering an it.
 
@@ -185,6 +185,43 @@ of _subject_:
   end
   ...
 ```
+_its(:sym)_ is a special form of _it_ which permits you to assert that a given property is what you expect it to me. Given
+
+``` ruby its(:sym)
+  ...
+  describe "something" do
+    subject do
+      get :index
+      response
+    end
+
+    its(:code) { should eq("200") }
+  end
+  ...
+```
+
+The _its(:code)_ call calls #code on the subject, the block then uses this as the implicit subject.
+
+This new DSL actually has one significant downside - every time you encounter an _it_ it evaluates the _subject_ and _let_ blocks that it should.
+This means if you're testing lots of assertions you'll end up with lots of test environment spin up. The best solution we have for that right now
+is that if you are testing lots of things you should employ good judgement and wrap your assertions in the block form of it.
+
+``` ruby block form of it
+   ...
+   describe "something" do
+    subject do
+      get :index
+      response
+    end
+
+    it do
+      subject.code.should eq("200")
+      subject.body.should eq("foo")
+    end
+   end
+   ...
+```
+
 
 In summary the trade offs of the new format are:
  * less flexible, the old format lends to writing tests however you want
