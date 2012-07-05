@@ -10,7 +10,7 @@ Next week is E3, which marks a year since we first launched TwitchTV. What a yea
 This post serves to provide an answer to the question I field the most when out and about talking about
 what we do: "What is the difference between TwitchTV and JustinTV?"
 <!-- more -->
-I joined at the end of April '12, I'd been a fan and user of JustinTV for a long time, as a technologist I highly
+I joined at the end of April '11, I'd been a fan and user of JustinTV for a long time, as a technologist I highly
 admired their large scale video system, after reading
 [the coverage on high scalability](http://highscalability.com/blog/2010/3/16/justintvs-live-video-broadcasting-architecture.html)
 I knew these guys were serious business. An [intense interview later](http://ossareh.posterous.com/interviews-are-tough-code-submissions-are-har)
