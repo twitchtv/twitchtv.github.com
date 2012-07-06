@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Technology | Getting Technical]]></title>
   <link href="http://twitchtv.github.com/blog/categories/technology/atom.xml" rel="self"/>
   <link href="http://twitchtv.github.com/"/>
-  <updated>2012-07-05T15:16:08-07:00</updated>
+  <updated>2012-07-05T17:08:16-07:00</updated>
   <id>http://twitchtv.github.com/</id>
   <author>
     <name><![CDATA[TwitchTV]]></name>
@@ -251,12 +251,16 @@ end
    ...
 ```</p>
 
-<p>In summary the trade offs of the new format are:
- * less flexible, the old format lends to writing tests however you want
- * more syntax, and understanding that syntax - i.e. everything being lazy will burn you once or twice
- * more DRY
- * easier on the eyes, when you become acccustomed to the format it is much easier to navigate
- * less state, you're less likely to be burned by a rouge before block which establishes an expectation of an object</p>
+<p>In summary the trade offs of the new format are:</p>
+
+<ul>
+<li>less flexible, the old format lends to writing tests however you want</li>
+<li>more syntax, and understanding that syntax - i.e. everything being lazy will burn you once or twice</li>
+<li>more DRY</li>
+<li>easier on the eyes, when you become acccustomed to the format it is much easier to navigate</li>
+<li>less state, you're less likely to be burned by a rouge before block which establishes an expectation of an object</li>
+</ul>
+
 
 <p>The expectation of our users that our site works all the time is a reasonable one, and the time investment in tests has already paid back
 dividends by preventing breaking changes from hitting production. As we're writing more tests we're becoming far more opinionated about
