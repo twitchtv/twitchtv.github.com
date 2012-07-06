@@ -224,6 +224,7 @@ is that if you are testing lots of things you should employ good judgement and w
 
 
 In summary the trade offs of the new format are:
+
  * less flexible, the old format lends to writing tests however you want
  * more syntax, and understanding that syntax - i.e. everything being lazy will burn you once or twice
  * more DRY
