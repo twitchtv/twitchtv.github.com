@@ -225,14 +225,6 @@ lines.</p>
 <span class='line-number'>35</span>
 <span class='line-number'>36</span>
 <span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
 </span><span class='line'>
 </span><span class='line'><span class="n">describe</span> <span class="no">BasicController</span> <span class="k">do</span>
@@ -240,41 +232,33 @@ lines.</p>
 </span><span class='line'>
 </span><span class='line'>  <span class="n">describe</span> <span class="s1">&#39;#show&#39;</span> <span class="k">do</span>
 </span><span class='line'>    <span class="n">subject</span> <span class="k">do</span>
-</span><span class='line'>      <span class="n">get</span> <span class="ss">:show</span><span class="p">,</span> <span class="ss">:login</span> <span class="o">=&gt;</span> <span class="n">login</span>
+</span><span class='line'>      <span class="n">get</span> <span class="ss">:show</span><span class="p">,</span> <span class="n">the_params</span>
 </span><span class='line'>      <span class="n">response</span>
 </span><span class='line'>    <span class="k">end</span>
 </span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">context</span> <span class="s2">&quot;error cases&quot;</span> <span class="k">do</span>
-</span><span class='line'>      <span class="n">let</span><span class="p">(</span><span class="ss">:expected_body</span><span class="p">)</span> <span class="p">{</span> <span class="p">{</span><span class="ss">:error</span> <span class="o">=&gt;</span> <span class="n">error_symbol</span> <span class="p">}</span> <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>      <span class="n">context</span> <span class="s2">&quot;when no login parameter is provided&quot;</span> <span class="k">do</span>
-</span><span class='line'>        <span class="n">subject</span> <span class="k">do</span>
-</span><span class='line'>          <span class="n">get</span> <span class="ss">:show</span>
-</span><span class='line'>          <span class="n">response</span>
-</span><span class='line'>        <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">let</span><span class="p">(</span><span class="ss">:error_symbol</span><span class="p">)</span> <span class="p">{</span> <span class="ss">:missing_login</span> <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">its</span><span class="p">(</span><span class="ss">:code</span><span class="p">)</span> <span class="p">{</span> <span class="n">should</span> <span class="n">eq</span><span class="p">(</span><span class="s2">&quot;404&quot;</span><span class="p">)</span> <span class="p">}</span>
-</span><span class='line'>        <span class="n">it</span> <span class="p">{</span> <span class="no">Yajl</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">subject</span><span class="o">.</span><span class="n">body</span><span class="p">)</span><span class="o">.</span><span class="n">should</span> <span class="n">eq</span><span class="p">(</span><span class="n">expected_body</span><span class="p">)</span> <span class="p">}</span>
-</span><span class='line'>      <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>      <span class="n">context</span> <span class="s2">&quot;when an invalid login parameter is provided&quot;</span> <span class="k">do</span>
-</span><span class='line'>        <span class="n">let</span><span class="p">(</span><span class="ss">:login</span><span class="p">)</span> <span class="p">{</span> <span class="no">SecureRandom</span><span class="o">.</span><span class="n">hex</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="p">}</span>
-</span><span class='line'>        <span class="n">let</span><span class="p">(</span><span class="ss">:error_symbol</span><span class="p">)</span> <span class="p">{</span> <span class="ss">:invalid_login</span> <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">its</span><span class="p">(</span><span class="ss">:code</span><span class="p">)</span> <span class="p">{</span> <span class="n">should</span> <span class="n">eq</span><span class="p">(</span><span class="s2">&quot;404&quot;</span><span class="p">)</span> <span class="p">}</span>
-</span><span class='line'>        <span class="n">it</span> <span class="p">{</span> <span class="no">Yajl</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">subject</span><span class="o">.</span><span class="n">body</span><span class="p">)</span><span class="o">.</span><span class="n">should</span> <span class="n">eq</span><span class="p">(</span><span class="n">expected_body</span><span class="p">)</span> <span class="p">}</span>
-</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="n">context</span> <span class="s1">&#39;without a login&#39;</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">let</span><span class="p">(</span><span class="ss">:the_params</span><span class="p">)</span> <span class="p">{</span> <span class="kp">nil</span> <span class="p">}</span>
+</span><span class='line'>      <span class="n">its</span><span class="p">(</span><span class="ss">:code</span><span class="p">)</span> <span class="p">{</span> <span class="n">should</span> <span class="n">eq</span><span class="p">(</span><span class="s1">&#39;404&#39;</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'>      <span class="n">its</span><span class="p">(</span><span class="ss">:body</span><span class="p">)</span> <span class="p">{</span> <span class="n">should</span> <span class="o">==</span> <span class="p">{</span><span class="ss">:error</span> <span class="o">=&gt;</span> <span class="ss">:missing_login</span> <span class="p">}</span><span class="o">.</span><span class="n">to_json</span> <span class="p">}</span>
 </span><span class='line'>    <span class="k">end</span>
 </span><span class='line'>
-</span><span class='line'>    <span class="n">context</span> <span class="s2">&quot;when a login parameter is provided&quot;</span> <span class="k">do</span>
-</span><span class='line'>      <span class="n">let</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span> <span class="p">{</span> <span class="no">FactoryGirl</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span> <span class="p">}</span>
-</span><span class='line'>      <span class="n">let</span><span class="p">(</span><span class="ss">:login</span><span class="p">)</span> <span class="p">{</span> <span class="n">user</span><span class="o">.</span><span class="n">login</span> <span class="p">}</span>
+</span><span class='line'>    <span class="n">context</span> <span class="s1">&#39;with a login&#39;</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">let</span><span class="p">(</span><span class="ss">:the_params</span><span class="p">)</span> <span class="p">{</span> <span class="p">{</span><span class="ss">:login</span> <span class="o">=&gt;</span> <span class="n">login</span><span class="p">}</span> <span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'>      <span class="n">its</span><span class="p">(</span><span class="ss">:code</span><span class="p">)</span> <span class="p">{</span> <span class="n">should</span> <span class="n">eq</span><span class="p">(</span><span class="s2">&quot;200&quot;</span><span class="p">)</span> <span class="p">}</span>
-</span><span class='line'>      <span class="n">it</span> <span class="p">{</span> <span class="no">Yajl</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">subject</span><span class="o">.</span><span class="n">body</span><span class="p">)</span><span class="o">.</span><span class="n">should</span> <span class="n">eq</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">to_json</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'>      <span class="n">context</span> <span class="s1">&#39;when invalid&#39;</span> <span class="k">do</span>
+</span><span class='line'>        <span class="n">let</span><span class="p">(</span><span class="ss">:login</span><span class="p">)</span> <span class="p">{</span> <span class="no">SecureRandom</span><span class="o">.</span><span class="n">hex</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">its</span><span class="p">(</span><span class="ss">:code</span><span class="p">)</span> <span class="p">{</span> <span class="n">should</span> <span class="n">eq</span><span class="p">(</span><span class="s1">&#39;404&#39;</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'>        <span class="n">its</span><span class="p">(</span><span class="ss">:body</span><span class="p">)</span> <span class="p">{</span> <span class="n">should</span> <span class="o">==</span> <span class="p">{</span><span class="ss">:error</span> <span class="o">=&gt;</span> <span class="ss">:invalid_login</span> <span class="p">}</span><span class="o">.</span><span class="n">to_json</span> <span class="p">}</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="n">context</span> <span class="s1">&#39;when valid&#39;</span> <span class="k">do</span>
+</span><span class='line'>        <span class="n">let</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span> <span class="p">{</span> <span class="no">FactoryGirl</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'>        <span class="n">let</span><span class="p">(</span><span class="ss">:login</span><span class="p">)</span> <span class="p">{</span> <span class="n">user</span><span class="o">.</span><span class="n">login</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">its</span><span class="p">(</span><span class="ss">:code</span><span class="p">)</span> <span class="p">{</span> <span class="n">should</span> <span class="n">eq</span><span class="p">(</span><span class="s1">&#39;200&#39;</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'>        <span class="n">its</span><span class="p">(</span><span class="ss">:body</span><span class="p">)</span> <span class="p">{</span> <span class="n">should</span> <span class="o">==</span> <span class="n">user</span><span class="o">.</span><span class="n">to_json</span> <span class="p">}</span>
+</span><span class='line'>      <span class="k">end</span>
 </span><span class='line'>    <span class="k">end</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'><span class="k">end</span>
@@ -425,15 +409,15 @@ is that if you are testing lots of things you should employ good judgement and w
 <span class='line-number'>13</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'>   <span class="o">.</span><span class="n">.</span><span class="o">.</span>
 </span><span class='line'>   <span class="n">describe</span> <span class="s2">&quot;something&quot;</span> <span class="k">do</span>
-</span><span class='line'>    <span class="n">subject</span> <span class="k">do</span>
-</span><span class='line'>      <span class="n">get</span> <span class="ss">:index</span>
-</span><span class='line'>      <span class="n">response</span>
-</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>     <span class="n">subject</span> <span class="k">do</span>
+</span><span class='line'>       <span class="n">get</span> <span class="ss">:index</span>
+</span><span class='line'>       <span class="n">response</span>
+</span><span class='line'>     <span class="k">end</span>
 </span><span class='line'>
-</span><span class='line'>    <span class="n">it</span> <span class="k">do</span>
-</span><span class='line'>      <span class="n">subject</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">should</span> <span class="n">eq</span><span class="p">(</span><span class="s2">&quot;200&quot;</span><span class="p">)</span>
-</span><span class='line'>      <span class="n">subject</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">should</span> <span class="n">eq</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>     <span class="n">it</span> <span class="k">do</span>
+</span><span class='line'>       <span class="n">subject</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">should</span> <span class="n">eq</span><span class="p">(</span><span class="s2">&quot;200&quot;</span><span class="p">)</span>
+</span><span class='line'>       <span class="n">subject</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">should</span> <span class="n">eq</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">)</span>
+</span><span class='line'>     <span class="k">end</span>
 </span><span class='line'>   <span class="k">end</span>
 </span><span class='line'>   <span class="o">.</span><span class="n">.</span><span class="o">.</span>
 </span></code></pre></td></tr></table></div></figure>
@@ -446,7 +430,7 @@ is that if you are testing lots of things you should employ good judgement and w
 <li>more syntax, and understanding that syntax - i.e. everything being lazy will burn you once or twice</li>
 <li>more DRY</li>
 <li>easier on the eyes, when you become acccustomed to the format it is much easier to navigate</li>
-<li>less state, you&#8217;re less likely to be burned by a rouge before block which establishes an expectation of an object</li>
+<li>less state, you&#8217;re less likely to be burned by a rogue before block which establishes an expectation of an object</li>
 </ul>
 
 
