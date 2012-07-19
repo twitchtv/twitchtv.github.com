@@ -72,41 +72,33 @@ describe BasicController do
 
   describe '#show' do
     subject do
-      get :show, :login => login
+      get :show, the_params
       response
     end
 
-
-    context "error cases" do
-      let(:expected_body) { {:error => error_symbol } }
-
-      context "when no login parameter is provided" do
-        subject do
-          get :show
-          response
-        end
-
-        let(:error_symbol) { :missing_login }
-
-        its(:code) { should eq("404") }
-        it { Yajl.load(subject.body).should eq(expected_body) }
-      end
-
-      context "when an invalid login parameter is provided" do
-        let(:login) { SecureRandom.hex(6) }
-        let(:error_symbol) { :invalid_login }
-
-        its(:code) { should eq("404") }
-        it { Yajl.load(subject.body).should eq(expected_body) }
-      end
+    context 'without a login' do
+      let(:the_params) { nil }
+      its(:code) { should eq('404') }
+      its(:body) { should == {:error => :missing_login }.to_json }
     end
 
-    context "when a login parameter is provided" do
-      let(:user) { FactoryGirl.create(:user) }
-      let(:login) { user.login }
+    context 'with a login' do
+      let(:the_params) { {:login => login} }
 
-      its(:code) { should eq("200") }
-      it { Yajl.load(subject.body).should eq(user.to_json) }
+      context 'when invalid' do
+        let(:login) { SecureRandom.hex(6) }
+
+        its(:code) { should eq('404') }
+        its(:body) { should == {:error => :invalid_login }.to_json }
+      end
+
+      context 'when valid' do
+        let(:user) { FactoryGirl.create(:user) }
+        let(:login) { user.login }
+
+        its(:code) { should eq('200') } 
+        its(:body) { should == user.to_json }
+      end
     end
   end
 end
@@ -209,15 +201,15 @@ is that if you are testing lots of things you should employ good judgement and w
 ``` ruby block form of it
    ...
    describe "something" do
-    subject do
-      get :index
-      response
-    end
+     subject do
+       get :index
+       response
+     end
 
-    it do
-      subject.code.should eq("200")
-      subject.body.should eq("foo")
-    end
+     it do
+       subject.code.should eq("200")
+       subject.body.should eq("foo")
+     end
    end
    ...
 ```
@@ -229,7 +221,7 @@ In summary the trade offs of the new format are:
  * more syntax, and understanding that syntax - i.e. everything being lazy will burn you once or twice
  * more DRY
  * easier on the eyes, when you become acccustomed to the format it is much easier to navigate
- * less state, you're less likely to be burned by a rouge before block which establishes an expectation of an object
+ * less state, you're less likely to be burned by a rogue before block which establishes an expectation of an object
 
 
 The expectation of our users that our site works all the time is a reasonable one, and the time investment in tests has already paid back
