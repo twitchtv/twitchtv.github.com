@@ -1,8 +1,0 @@
----
-layout: post
-title: "new-post"
-date: 2012-09-26 16:32
-comments: true
-categories: 
----
-fixing the blog
